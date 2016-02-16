@@ -6,10 +6,10 @@ function domloaded(){
 	var ctx = canvas.getContext("2d");
 
 	var x = canvas.width / 2;
-	var y = canvas.height - 30;
+	var y = canvas.height - 23;
 
-	var dx = 4;
-	var dy = -4;
+	var dx = 6;
+	var dy = -6;
 
 	var ballRadius = 10;
 
@@ -32,11 +32,13 @@ function domloaded(){
 
 	var lives = 3;
 
+	var isPaused = true;
+
+	var count = 0;
+
 	var soundFx = document.getElementById("soundFx");
 	var brickHit = document.getElementById("brickHit");
 	var gameOver = document.getElementById("gameOver");
-
-	soundFx.play();
 
 	var bricks = [];
 	for( i = 0; i < brickColumnCount; i++ )
@@ -62,6 +64,16 @@ function domloaded(){
 		{
 			leftPressed = true;
 		}
+		if (e.keyCode == 80 && isPaused === false) 
+		{	
+			isPaused = true;
+		}
+		if( e.keyCode == 13 && isPaused === true )
+		{
+			isPaused = false;
+			soundFx.play();
+			draw();
+		}
 	}
 
 	function keyUpHandler(e)
@@ -79,9 +91,12 @@ function domloaded(){
 	function mouseMoveHandler(e)
 	{
 		var relativeX = e.clientX - canvas.offsetLeft;
-		if(relativeX > 0 && relativeX < canvas.width) 
+		if(relativeX > 0 && relativeX < canvas.width ) 
 		{
-        	paddleX = relativeX - paddleWidth / 2;
+			if( isPaused === false )
+        	{	
+        		paddleX = relativeX - paddleWidth / 2;
+        	}
     	}
 	}
 
@@ -164,6 +179,23 @@ function domloaded(){
     	ctx.fillText("Lives: "+lives, canvas.width-120, 30);
 	}
 
+	/*function drawInstruction()
+	{
+		ctx.font = "30px Arial";
+		ctx.fillStyle = "#006600";
+		ctx.fillText("Press enter to start and p to pause", canvas.width/2, canvas.height/2);
+	}*/
+
+		
+	window.requestAnimFrame = (function() {
+    return  window.requestAnimationFrame       ||
+            window.webkitRequestAnimationFrame ||
+            window.mozRequestAnimationFrame    ||
+            function(callback) {
+                window.setTimeout(callback, 1000 / 60);
+            };
+	})();
+
 	function draw() 
 	{
 		ctx.clearRect( 0, 0, canvas.width, canvas.height );
@@ -179,7 +211,7 @@ function domloaded(){
 			dy = -dy;
 			soundFx.play();
 		} 
-		else if( y + dy > canvas.height - ballRadius)
+		else if( y > canvas.height )
 		{
 			if( x > paddleX && x < paddleX + paddleWidth )
 			{
@@ -203,10 +235,11 @@ function domloaded(){
 	            {
 	            	gameOver.play();
 	                x = canvas.width/2;			                
-	                y = canvas.height-30;
-				    dx = 5;
-				    dy = -5;
+	                y = canvas.height-15;
+				    dx = 8;
+				    dy = -8;
 				    paddleX = (canvas.width-paddleWidth)/2;
+				    count = 0;
 				}
 			}
 		}
@@ -229,7 +262,20 @@ function domloaded(){
 
 		x += dx;
 		y += dy;
+
+		if (isPaused) {
+        	Update();
+    	}
+
+    	if( count === 0 && lives < 3 )
+    	{
+    		isPaused = true;
+    	}
+
+    	count++;
+
 		requestAnimationFrame(draw);
 	}
 	draw();
 }
+
