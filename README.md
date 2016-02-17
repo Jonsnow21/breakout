@@ -5,7 +5,7 @@
 Date started : 13th feb 2016
 ----------
 
-![breakout screenshot](http://imgur.com/DiYvtM6)
+![](http://i.imgur.com/DiYvtM6.png)
 
 It is the classic breakout game created in pure vanilla JavaScript and HTML5 canvas.
 
