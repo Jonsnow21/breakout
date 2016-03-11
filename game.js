@@ -132,7 +132,7 @@ function domloaded(){
 					bricks[i][j].y = brickY;
 					ctx.beginPath();
 					ctx.rect( brickX, brickY, brickWidth, brickHeight );
-					ctx.fillStyle = "#CC3300";
+					ctx.fillStyle = "#8000ff";
 					ctx.fill();
 					ctx.closePath();
 				}
